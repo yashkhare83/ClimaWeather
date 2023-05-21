@@ -1,61 +1,53 @@
+import 'package:clima_weather/screens/location_screen.dart';
+import 'package:clima_weather/services/networking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:geolocator/geolocator.dart';
+import '../services/networking.dart';
+import '../services/weather.dart';
+import 'location_screen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../services/location.dart';
 
-class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({super.key});
+const apiKey = 'a3859161e8767326d63fd82b522944e4';
 
+class LoadingScreen extends StatefulWidget {
   @override
-  State<LoadingScreen> createState() => _LoadingScreenState();
+  State<StatefulWidget> createState() {
+    return _LoadingScreenState();
+  }
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getLocation();
+    getLocationData();
   }
 
-  void getLocation() async {
-    Location location = Location();
-    // ignore: await_only_futures
-    await location.getCurrentLocation();
-    print(location.latitute);
-    print(location.longitude);
-  }
+  void getLocationData() async {
+    var weatherData = await WeatherModel().getLocationWeather();
 
-  Future<void> getData() async {
-    http.Response response = await http.get(Uri.parse(
-        'https://api.tomorrow.io/v4/timelines?location=40.75872069597532,-73.98529171943665&fields=temperature&timesteps=1h&units=metric&apikey=kztfqd1prnQXWHsMWjrGhBGbnrGEfvPi'));
-
-    if (response.statusCode == 200) {
-      String fetchData = response.body;
-      var res = jsonDecode(fetchData)['data']['timelines'][0]['timestep'];
-      print(res);
-    } else {
-      print(response.statusCode);
-    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return LocationScreen(
+        locationWeather: weatherData,
+      );
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
-    getData();
     return Scaffold(
-        // body: Center(
-        //   child: ElevatedButton(
-        //     onPressed: () {
-        //       //Get the current location
-        //       getLocation();
-        //     },
-        //     child: Text('Get Location'),
-        //   ),
-        // ),
-        );
+      body: Center(
+        child: SpinKitDoubleBounce(
+          color: Colors.white,
+          size: 100.0,
+        ),
+      ),
+    );
   }
 }
