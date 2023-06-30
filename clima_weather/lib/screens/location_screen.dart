@@ -1,9 +1,11 @@
+import 'package:clima_weather/screens/weather_forcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import '../services/weather.dart';
 import '../utilities/constants.dart';
 import 'city_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LocationScreen extends StatefulWidget {
   LocationScreen({this.locationWeather});
@@ -83,7 +85,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return CityScreen();
+                            return WeatherForcast();
                           },
                         ),
                       );
